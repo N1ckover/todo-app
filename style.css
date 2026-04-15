@@ -4,6 +4,7 @@ h1 {
     margin-top: 20px;
     font-weight: 600;
     font-size: 32px;
+   
 }
 
 input { 
@@ -16,6 +17,7 @@ input {
     margin-right: 10px; /* para dar un poco de espacio entre el input y el botón */
     color: #ffffff;
     font-family: 'Inter', sans-serif;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* para dar un efecto de sombra al input */
 }
 /* botón para agregar tareas */
 #addBtn {
@@ -30,12 +32,20 @@ input {
     gap: 10px;
 }
 
+#taskList {
+    position: relative;
+}
+
 /* botones dentro de cada tarea */
 li button {
     margin-left: 15px;
+    
     cursor: pointer;
-    background-color: #ca6161;
+    background-color: #ff6b6b;
     border: none; 
+    background: transparent;
+    font-size: 18px;
+    
 }
 /* todo el contenido vicible de la pagina  */
 body {
@@ -55,11 +65,15 @@ li {
     display : flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
+    overflow: visible;
     background: #2c2c2c;
     padding: 10px;
     border-radius: 7px;
     margin-bottom: 10px;
     font-family: 'Inter', sans-serif;
+    transition: all 0.25s ease; /* para suavizar la transición al hacer hover */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 /* Todos los botones */
 button {
@@ -68,6 +82,7 @@ button {
     color: white;
     padding: 5px 10px;
     border-radius: 7px;
+    transition: all 0.2s ease;
 }
 
 /* tarea completada */
@@ -75,6 +90,8 @@ button {
     text-decoration: line-through;
     color: #888888;
     opacity: 0.6;
+    
+   
 }
 /* contenedor de los filtros */
 .filters {
@@ -89,8 +106,124 @@ button {
     color: white;
     padding: 5px 10px;
     border-radius: 7px;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 .filters button:hover {
-    background: #555;
+  transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+}
+
+.filters button.active {
+    background: #888;
+     box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+
+}
+
+li::before {
+    content: attr(data-icon);
+    margin-right: 10px;
+    color: #00ff88;
+}
+
+li:hover {
+    transform: scale(1.02);
+}
+
+#clearAll {
+    background: #8b2e2e;
+    border-radius: 7px;
+    color: white;
+    padding: 5px 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: all 0.2s ease;
+}
+
+#clearAll:hover {
+    background: #b33;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+}
+
+.fade-out {
+    pointer-events: none;
+    animation: fadeOut 0.32s ease-out forwards;
+}
+
+.fade-out::after {
+    content: "";
+    position: absolute;
+    left: -8%;
+    right: -8%;
+    top: -18%;
+    bottom: -18%;
+    border-radius: 999px;
+    background:
+        radial-gradient(circle at 15% 45%, rgba(230, 230, 230, 0.48) 0 22%, transparent 52%),
+        radial-gradient(circle at 45% 30%, rgba(200, 200, 200, 0.42) 0 24%, transparent 54%),
+        radial-gradient(circle at 68% 58%, rgba(170, 170, 170, 0.34) 0 20%, transparent 50%),
+        radial-gradient(circle at 86% 35%, rgba(145, 145, 145, 0.28) 0 16%, transparent 46%);
+    filter: blur(10px);
+    animation: smokeOut 0.42s ease-out forwards;
+}
+
+#taskList.smoke-burst::after {
+    content: "";
+    position: absolute;
+    inset: -8% -4%;
+    pointer-events: none;
+    border-radius: 16px;
+    background:
+        radial-gradient(circle at 18% 38%, rgba(245, 245, 245, 0.28) 0 14%, transparent 34%),
+        radial-gradient(circle at 34% 60%, rgba(220, 220, 220, 0.24) 0 12%, transparent 30%),
+        radial-gradient(circle at 58% 32%, rgba(195, 195, 195, 0.2) 0 12%, transparent 28%),
+        radial-gradient(circle at 82% 54%, rgba(170, 170, 170, 0.18) 0 14%, transparent 32%);
+    filter: blur(14px);
+    animation: sectionSmoke 0.32s ease-out forwards;
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
+
+@keyframes smokeOut {
+    0% {
+        opacity: 0;
+        transform: translateY(0) scale(0.9);
+    }
+    35% {
+        opacity: 0.9;
+        transform: translateY(-4px) scale(1.03);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-16px) scale(1.18);
+    }
+}
+
+@keyframes sectionSmoke {
+    0% {
+        opacity: 0;
+        transform: scale(0.95) translateY(2px);
+    }
+    25% {
+        opacity: 0.95;
+        transform: scale(1.01) translateY(-1px);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.05) translateY(-12px);
+    }
 }
