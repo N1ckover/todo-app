@@ -1,0 +1,96 @@
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    font-weight: 600;
+    font-size: 32px;
+}
+
+input { 
+    padding: 10px; /* para dar un poco de espacio dentro del input */
+    width: 600px; /* para que el input tenga un ancho fijo */
+    border-radius: 5px; /* para redondear las esquinas del input */
+    border: none; /* quitar el borde por defecto del input */
+    background-color: #414141;
+    outline: none; /* para quitar el borde azul al hacer clic en el input */
+    margin-right: 10px; /* para dar un poco de espacio entre el input y el botón */
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+}
+/* botón para agregar tareas */
+#addBtn {
+   padding: 10px 20px;
+   background-color: #464961;
+   color: #ffffff;
+   font-family: 'Inter', sans-serif;
+}
+/* contenedor del input y el botón para agregar tareas */
+.input-container {
+    display: flex;
+    gap: 10px;
+}
+
+/* botones dentro de cada tarea */
+li button {
+    margin-left: 15px;
+    cursor: pointer;
+    background-color: #ca6161;
+    border: none; 
+}
+/* todo el contenido vicible de la pagina  */
+body {
+    background: #1e1e1e;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.5px;
+
+
+    display: flex; /* para centrar el contenido */
+    flex-direction: column; /* para que el h1 y el ul estén en columna */
+    align-items: center; /* para centrar horizontalmente */
+    padding: 70px; /* para dar un poco de espacio alrededor del contenido */
+}
+/* cada tarea */
+li {
+    display : flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #2c2c2c;
+    padding: 10px;
+    border-radius: 7px;
+    margin-bottom: 10px;
+    font-family: 'Inter', sans-serif;
+}
+/* Todos los botones */
+button {
+    background: #ff4d4d;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 7px;
+}
+
+/* tarea completada */
+.completed {
+    text-decoration: line-through;
+    color: #888888;
+    opacity: 0.6;
+}
+/* contenedor de los filtros */
+.filters {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.filters button {
+    background: #1f204e;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 7px;
+}
+
+.filters button:hover {
+    background: #555;
+}
