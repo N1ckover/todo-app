@@ -1,5 +1,6 @@
 const input = document.getElementById("taskInput");
 const addButton = document.getElementById("addBtn");
+const prioritySelect = document.getElementById("priority");
 const taskList = document.getElementById("taskList");
 
 const filterAll = document.getElementById("filterAll");
@@ -44,19 +45,38 @@ function removeTaskWithAnimation(li) {
 // AGREGAR TAREA
 function addTask() {
     const taskText = input.value.trim();
+    const priority = prioritySelect.value
     if (taskText === "") return;
 
-    createTaskElement(taskText);
+    createTaskElement(taskText, priority);
 
     input.value = "";
     saveTasks();
 }
 
 // CREAR ELEMENTO
-function createTaskElement(text) {
+function createTaskElement(text, priority) {
     const li = document.createElement("li");
-    li.textContent = text;
 
+    // clase prioridad
+    li.classList.add("priority-" + priority);
+
+    // icono
+    const prioritySpan = document.createElement("span");
+    prioritySpan.classList.add("priority-icon");
+    if (priority === "alta") {
+        prioritySpan.textContent = "🔥";
+    } else if (priority === "media") {
+        prioritySpan.textContent = "⚡";
+    } else {
+        prioritySpan.textContent = "🌿";
+    }
+
+    // texto
+    const textSpan = document.createElement("span");
+    textSpan.textContent = text;
+
+    // botón
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "✖";
 
@@ -65,6 +85,7 @@ function createTaskElement(text) {
         removeTaskWithAnimation(li);
     });
 
+    // evento completar
     li.addEventListener("click", function() {
         li.classList.toggle("completed");
 
@@ -77,6 +98,14 @@ function createTaskElement(text) {
         saveTasks();
     });
 
+  
+ const leftContainer = document.createElement("div");
+    leftContainer.classList.add("task-left");
+
+    leftContainer.appendChild(prioritySpan);
+    leftContainer.appendChild(textSpan);
+
+    li.appendChild(leftContainer);
     li.appendChild(deleteButton);
     taskList.appendChild(li);
 }
@@ -101,7 +130,7 @@ function loadTasks() {
             removeTaskWithAnimation(li);
         });
 
-        // 🔥 reactivar completed (te faltaba esto)
+        //
         li.addEventListener("click", function() {
             li.classList.toggle("completed");
 
