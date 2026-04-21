@@ -1,202 +1,184 @@
-const input = document.getElementById("taskInput");
-const addButton = document.getElementById("addBtn");
-const prioritySelect = document.getElementById("priority");
+const taskInput = document.getElementById("taskInput");
+const addBtn = document.getElementById("addBtn");
+const prioritySelect = document.getElementById("prioritySelect");
 const taskList = document.getElementById("taskList");
+const clearAllBtn = document.getElementById("clearAll");
+const filterButtons = document.querySelectorAll(".filters button[data-filter]");
+const priorityContainer = document.querySelector(".priority-container");
 
-const filterAll = document.getElementById("filterAll");
-const filterCompleted = document.getElementById("filterCompleted");
-const filterPending = document.getElementById("filterPending");
-const clearAll = document.getElementById("clearAll");
+const STORAGE_KEY = "todo_tasks_v1";
 
-function removeTaskWithAnimation(li) {
-    taskList.classList.remove("smoke-burst");
-    void taskList.offsetWidth;
-    taskList.classList.add("smoke-burst");
+let tasks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+let currentFilter = "all";
 
-    li.classList.remove("fade-out");
-    // Force reflow so the animation always restarts when class is applied.
-    void li.offsetWidth;
-    li.classList.add("fade-out");
+const priorityMeta = {
+  alta: { icon: "🔥" },
+  media: { icon: "⚡" },
+  baja: { icon: "🌱" }
+};
 
-    let removed = false;
-
-    function finishRemove() {
-        if (removed) return;
-        removed = true;
-        li.remove();
-        saveTasks();
-    }
-
-    li.addEventListener("animationend", function(event) {
-        if (event.animationName === "fadeOut") {
-            finishRemove();
-        }
-    }, { once: true });
-
-    taskList.addEventListener("animationend", function(event) {
-        if (event.animationName === "sectionSmoke") {
-            taskList.classList.remove("smoke-burst");
-        }
-    }, { once: true });
-
-    setTimeout(finishRemove, 360);
-}
-
-// AGREGAR TAREA
-function addTask() {
-    const taskText = input.value.trim();
-    const priority = prioritySelect.value
-    if (taskText === "") return;
-
-    createTaskElement(taskText, priority);
-
-    input.value = "";
-    saveTasks();
-}
-
-// CREAR ELEMENTO
-function createTaskElement(text, priority) {
-    const li = document.createElement("li");
-
-    // clase prioridad
-    li.classList.add("priority-" + priority);
-
-    // icono
-    const prioritySpan = document.createElement("span");
-    prioritySpan.classList.add("priority-icon");
-    if (priority === "alta") {
-        prioritySpan.textContent = "🔥";
-    } else if (priority === "media") {
-        prioritySpan.textContent = "⚡";
-    } else {
-        prioritySpan.textContent = "🌿";
-    }
-
-    // texto
-    const textSpan = document.createElement("span");
-    textSpan.textContent = text;
-
-    // botón
-    const deleteButton = document.createElement("button");
-    deleteButton.textContent = "✖";
-
-    deleteButton.addEventListener("click", function(event) {
-        event.stopPropagation();
-        removeTaskWithAnimation(li);
-    });
-
-    // evento completar
-    li.addEventListener("click", function() {
-        li.classList.toggle("completed");
-
-        if (li.classList.contains("completed")) {
-            li.setAttribute("data-icon", "✅");
-        } else {
-            li.setAttribute("data-icon", "");
-        }
-
-        saveTasks();
-    });
-
-  
- const leftContainer = document.createElement("div");
-    leftContainer.classList.add("task-left");
-
-    leftContainer.appendChild(prioritySpan);
-    leftContainer.appendChild(textSpan);
-
-    li.appendChild(leftContainer);
-    li.appendChild(deleteButton);
-    taskList.appendChild(li);
-}
-
-// GUARDAR
 function saveTasks() {
-    localStorage.setItem("tasks", taskList.innerHTML);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
 }
 
-// CARGAR
-function loadTasks() {
-    taskList.innerHTML = localStorage.getItem("tasks") || "";
-
-    const items = document.querySelectorAll("li");
-
-    items.forEach(function(li) {
-        const deleteButton = li.querySelector("button");
-
-        // reactivar eliminar con animación
-        deleteButton.addEventListener("click", function(event) {
-            event.stopPropagation();
-            removeTaskWithAnimation(li);
-        });
-
-        //
-        li.addEventListener("click", function() {
-            li.classList.toggle("completed");
-
-            if (li.classList.contains("completed")) {
-                li.setAttribute("data-icon", "✅");
-            } else {
-                li.setAttribute("data-icon", "");
-            }
-
-            saveTasks();
-        });
-    });
+function formatDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleString("es-AR", {
+    day: "2-digit",
+    month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
 }
 
-// EVENTOS
-addButton.addEventListener("click", addTask);
-
-input.addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-        addTask();
-    }
-});
-
-// FILTROS
-filterAll.addEventListener("click", function() {
-    setActiveButton(filterAll);
-
-    const items = document.querySelectorAll("li");
-    items.forEach(li => li.style.display = "flex");
-});
-
-filterCompleted.addEventListener("click", function() {
-    setActiveButton(filterCompleted);
-
-    const items = document.querySelectorAll("li");
-    items.forEach(function(li) {
-        li.style.display = li.classList.contains("completed") ? "flex" : "none";
-    });
-});
-
-filterPending.addEventListener("click", function() {
-    setActiveButton(filterPending);
-
-    const items = document.querySelectorAll("li");
-    items.forEach(function(li) {
-        li.style.display = !li.classList.contains("completed") ? "flex" : "none";
-    });
-});
-
-// BOTÓN ACTIVO
-function setActiveButton(activeBtn) {
-    const buttons = document.querySelectorAll(".filters button");
-
-    buttons.forEach(btn => btn.classList.remove("active"));
-    activeBtn.classList.add("active");
+function getFilteredTasks() {
+  if (currentFilter === "completed") return tasks.filter(t => t.completed);
+  if (currentFilter === "pending") return tasks.filter(t => !t.completed);
+  return tasks;
 }
 
-// ELIMINAR TODO
-clearAll.addEventListener("click", function() {
-    const confirmDelete = confirm("¿Estás seguro de que quieres eliminar TODAS las tareas?");
+function renderTasks() {
+  taskList.innerHTML = "";
 
-    if (confirmDelete) {
-        taskList.innerHTML = "";
-        saveTasks();
-    }
+  const filtered = getFilteredTasks();
+
+  filtered.forEach(task => {
+    const li = document.createElement("li");
+    li.classList.add(`priority-${task.priority}`);
+    li.dataset.id = String(task.id);
+    li.dataset.icon = priorityMeta[task.priority]?.icon || "•";
+
+    const left = document.createElement("div");
+    left.className = "task-left";
+
+    const priorityIcon = document.createElement("span");
+    priorityIcon.className = "priority-icon";
+    priorityIcon.textContent = priorityMeta[task.priority]?.icon || "•";
+
+    const text = document.createElement("span");
+    text.textContent = task.text;
+    if (task.completed) text.classList.add("completed");
+
+    const date = document.createElement("span");
+    date.className = "task-date";
+    date.textContent = formatDate(task.createdAt);
+
+    left.appendChild(priorityIcon);
+    left.appendChild(text);
+    left.appendChild(date);
+
+    const actions = document.createElement("div");
+
+    const toggleBtn = document.createElement("button");
+    toggleBtn.type = "button";
+    toggleBtn.dataset.action = "toggle";
+    toggleBtn.title = "Completar / desmarcar";
+    toggleBtn.textContent = "✔";
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.type = "button";
+    deleteBtn.dataset.action = "delete";
+    deleteBtn.title = "Eliminar";
+    deleteBtn.textContent = "🗑";
+
+    actions.appendChild(toggleBtn);
+    actions.appendChild(deleteBtn);
+
+    li.appendChild(left);
+    li.appendChild(actions);
+
+    taskList.appendChild(li);
+  });
+}
+
+function addTask() {
+  const text = taskInput.value.trim();
+  if (!text) return;
+
+  tasks.unshift({
+    id: Date.now(),
+    text,
+    priority: prioritySelect.value,
+    completed: false,
+    createdAt: new Date().toISOString()
+  });
+
+  taskInput.value = "";
+  taskInput.focus();
+
+  saveTasks();
+  renderTasks();
+}
+
+function setFilter(filter) {
+  currentFilter = filter;
+  filterButtons.forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.filter === filter);
+  });
+  renderTasks();
+}
+
+addBtn.addEventListener("click", addTask);
+
+taskInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") addTask();
 });
 
-// INICIO
-loadTasks();
+taskList.addEventListener("click", (e) => {
+  const btn = e.target.closest("button");
+  if (!btn) return;
+
+  const li = e.target.closest("li");
+  if (!li) return;
+
+  const id = Number(li.dataset.id);
+  const action = btn.dataset.action;
+  const task = tasks.find(t => t.id === id);
+  if (!task) return;
+
+  if (action === "toggle") {
+    task.completed = !task.completed;
+    saveTasks();
+    renderTasks();
+    return;
+  }
+
+  if (action === "delete") {
+    li.classList.add("fade-out");
+    setTimeout(() => {
+      tasks = tasks.filter(t => t.id !== id);
+      saveTasks();
+      renderTasks();
+    }, 320);
+  }
+});
+
+filterButtons.forEach(btn => {
+  btn.addEventListener("click", () => setFilter(btn.dataset.filter));
+});
+
+clearAllBtn.addEventListener("click", () => {
+  if (tasks.length === 0) return;
+
+  taskList.classList.add("smoke-burst");
+  const items = [...taskList.querySelectorAll("li")];
+  items.forEach(li => li.classList.add("fade-out"));
+
+  setTimeout(() => {
+    tasks = [];
+    saveTasks();
+    renderTasks();
+    taskList.classList.remove("smoke-burst");
+  }, 340);
+});
+
+syncPriorityVisual();
+renderTasks();
+
+function syncPriorityVisual() {
+  if (!priorityContainer) return;
+  priorityContainer.classList.remove("is-alta", "is-media", "is-baja");
+  priorityContainer.classList.add(`is-${prioritySelect.value}`);
+}
+
+prioritySelect.addEventListener("change", syncPriorityVisual);

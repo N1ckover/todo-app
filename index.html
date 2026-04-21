@@ -1,42 +1,54 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <link rel="stylesheet" href="style.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi To-DO</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi To-DO</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <!-- Fuente usada en tu CSS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
 </head>
+<body>
+  <main class="app-container">
+    <h1>Mi To-DO</h1>
 
-<body> 
+    <!-- Fila superior -->
+    <div class="input-row">
+      <input
+        id="taskInput"
+        type="text"
+        placeholder="Escribe una tarea..."
+        aria-label="Nueva tarea"
+      />
+      <button id="addBtn" type="button">Agregar tarea</button>
+    </div>
 
-<h1>Mi To-DO</h1>
-
-<div class="input-container">
-    <input type="text" id="taskInput" placeholder="Escribe una tarea">
-    <button id="addBtn">Agregar tarea</button>
+    <!-- Fila inferior -->
+    <div class="bottom-row">
+      <div class="priority-container">
+  <select id="prioritySelect" aria-label="Seleccionar prioridad">
+    <option value="alta">Alta</option>
+    <option value="media" selected>Media</option>
+    <option value="baja">Baja</option>
+  </select>
 </div>
 
+      <div class="filters">
+        <button type="button" class="active" data-filter="all">Todas</button>
+        <button type="button" data-filter="completed">✔</button>
+        <button type="button" data-filter="pending">Pendientes</button>
+        <button type="button" id="clearAll" aria-label="Vaciar tareas">🗑</button>
+      </div>
+    </div>
 
-<div class="input-container">
-    <select id="priority">
-        <option value="alta">🔴 Alta</option>
-        <option value="media">🟡 Media</option>
-        <option value="baja">🟢 Baja</option>
-    </select>
-</div>
+    <!-- Lista -->
+    <ul id="taskList"></ul>
+  </main>
 
-<div class="filters">
-    <button id="filterAll">Todas</button>
-    <button id="filterCompleted">✔ Completadas</button>
-    <button id="filterPending">Pendientes</button>
-    <button id="clearAll">🗑 Vaciar</button>
-</div>
-
-<ul id="taskList"></ul>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

@@ -1,141 +1,177 @@
-
 h1 {
     text-align: center;
-    margin-top: 20px;
+    margin: 0 0 20px 0;
     font-weight: 600;
     font-size: 32px;
-   
 }
 
-input { 
-    padding: 10px; /* para dar un poco de espacio dentro del input */
-    width: 600px; /* para que el input tenga un ancho fijo */
-    border-radius: 5px; /* para redondear las esquinas del input */
-    border: none; /* quitar el borde por defecto del input */
-    background-color: #414141;
-    outline: none; /* para quitar el borde azul al hacer clic en el input */
-    margin-right: 10px; /* para dar un poco de espacio entre el input y el botón */
-    color: #ffffff;
-    font-family: 'Inter', sans-serif;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* para dar un efecto de sombra al input */
-}
-/* botón para agregar tareas */
-#addBtn {
-   padding: 10px 20px;
-   background-color: #464961;
-   color: #ffffff;
-   font-family: 'Inter', sans-serif;
-}
-/* contenedor del input y el botón para agregar tareas */
-.input-container {
-    display: flex;
-    gap: 10px;
-}
-
-#taskList {
-    position: relative;
-}
-
-/* botones dentro de cada tarea */
-li button {
-    margin-left: 15px;
-    
-    cursor: pointer;
-    background-color: #ff6b6b;
-    border: none; 
-    background: transparent;
-    font-size: 18px;
-    
-}
-/* todo el contenido vicible de la pagina  */
+/* ===== Base ===== */
 body {
     background: #1e1e1e;
-    color: white;
+    color: #fff;
     font-family: 'Inter', sans-serif;
     letter-spacing: 0.5px;
+    margin: 0;
+    min-height: 100vh;
 
-
-    display: flex; /* para centrar el contenido */
-    flex-direction: column; /* para que el h1 y el ul estén en columna */
-    align-items: center; /* para centrar horizontalmente */
-    padding: 70px; /* para dar un poco de espacio alrededor del contenido */
-}
-/* cada tarea */
-li {
-    display : flex;
-    justify-content: space-between;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    position: relative;
-    overflow: visible;
-    background: #2c2c2c;
-    padding: 10px;
-    border-radius: 7px;
-    margin-bottom: 10px;
-    font-family: 'Inter', sans-serif;
-    transition: all 0.25s ease; /* para suavizar la transición al hacer hover */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    padding: 48px 16px;
 }
-/* Todos los botones */
-button {
-    background: #ff4d4d;
+
+.app-container {
+    width: min(600px, 100%);
+}
+
+/* ===== Fila superior: input + botón agregar ===== */
+.input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    width: 100%;
+}
+
+#taskInput {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 12px;
+    border-radius: 8px;
     border: none;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 7px;
+    background-color: #2c2c2c;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+#addBtn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #464961;
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
     transition: all 0.2s ease;
 }
 
-/* tarea completada */
-.completed {
-    text-decoration: line-through;
-    color: #888888;
-    opacity: 0.6;
-    
-   
+#addBtn:hover {
+    transform: translateY(-2px);
+    background: #5a5f81;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
 }
-/* contenedor de los filtros */
-.filters {
-    margin-top: 20px;
+
+/* ===== Fila inferior: prioridad + filtros ===== */
+.bottom-row {
     display: flex;
-    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.priority-container {
+    position: relative;
+    width: 170px;
+    flex: 0 0 170px;
+    --priority-color: #ffd54a; /* default: media */
+}
+
+/* punto visual de prioridad */
+.priority-container::before {
+    content: "";
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--priority-color);
+    transform: translateY(-50%);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--priority-color) 65%, transparent);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* color según prioridad seleccionada */
+.priority-container.is-alta { --priority-color: #ff5a5a; }
+.priority-container.is-media { --priority-color: #ffd54a; }
+.priority-container.is-baja { --priority-color: #61d985; }
+
+.priority-container select {
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 34px 10px 30px; /* espacio para el punto de color */
+    border-radius: 8px;
+    border: none;
+    background: #2c2c2c;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    appearance: none;
+    outline: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+}
+
+.priority-container select:hover,
+.priority-container select:focus {
+    transform: translateY(-1px);
+    background: #3a3a3a;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.priority-container::after {
+    content: "▼";
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #aaa;
+    font-size: 12px;
+}
+
+/* ===== Filtros ===== */
+.filters {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 0;
 }
 
 .filters button {
     background: #1f204e;
     border: none;
     color: white;
-    padding: 5px 10px;
+    padding: 8px 12px;
     border-radius: 7px;
-
+    cursor: pointer;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: all 0.2s ease;
 }
 
 .filters button:hover {
-  transform: translateY(-2px);
+    transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(0,0,0,0.4);
 }
 
 .filters button.active {
-    background: #888;
-     box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
-
-}
-
-li::before {
-    content: attr(data-icon);
-    margin-right: 10px;
-    color: #00ff88;
-}
-
-li:hover {
-    transform: scale(1.02);
+    background: #6f6f6f;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
 }
 
 #clearAll {
     background: #8b2e2e;
     border-radius: 7px;
     color: white;
-    padding: 5px 12px;
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     transition: all 0.2s ease;
 }
@@ -146,6 +182,107 @@ li:hover {
     box-shadow: 0 6px 18px rgba(0,0,0,0.4);
 }
 
+/* ===== Lista ===== */
+#taskList {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    position: relative;
+}
+
+li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    overflow: visible;
+    background: #2c2c2c;
+    padding: 10px;
+    border-radius: 7px;
+    margin-bottom: 10px;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+li:hover {
+    transform: scale(1.02);
+}
+
+li::before {
+    content: attr(data-icon);
+    margin-right: 10px;
+    color: #00ff88;
+}
+
+li button {
+    margin-left: 15px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    color: #fff;
+}
+
+.completed {
+    text-decoration: line-through;
+    color: #888888;
+    opacity: 0.6;
+}
+
+/* ===== Prioridades ===== */
+.priority-alta { border-left: 5px solid red; }
+.priority-media { border-left: 5px solid yellow; }
+.priority-baja { border-left: 5px solid green; }
+
+li span {
+    margin-right: 10px;
+}
+
+.priority-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.priority-media .priority-icon {
+    background: rgba(255, 255, 0, 0.2);
+}
+
+.priority-baja .priority-icon {
+    background: rgba(0, 255, 0, 0.2);
+}
+
+@keyframes pulseFire {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.priority-alta .priority-icon {
+    background: rgba(255, 0, 0, 0.2);
+    animation: pulseFire 0.8s infinite;
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.4);
+}
+
+.task-left {
+    display: flex;
+    align-items: center;
+}
+
+.task-date {
+    font-size: 12px;
+    color: #888;
+    margin-left: 10px;
+}
+
+/* ===== Animaciones de borrado ===== */
 .fade-out {
     pointer-events: none;
     animation: fadeOut 0.32s ease-out forwards;
@@ -184,104 +321,46 @@ li:hover {
 }
 
 @keyframes fadeOut {
-    0% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.5;
-        transform: scale(1.1);
-    }
-    100% {
-        opacity: 0;
-        transform: scale(0.8);
-    }
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.1); }
+    100% { opacity: 0; transform: scale(0.8); }
 }
 
 @keyframes smokeOut {
-    0% {
-        opacity: 0;
-        transform: translateY(0) scale(0.9);
-    }
-    35% {
-        opacity: 0.9;
-        transform: translateY(-4px) scale(1.03);
-    }
-    100% {
-        opacity: 0;
-        transform: translateY(-16px) scale(1.18);
-    }
+    0% { opacity: 0; transform: translateY(0) scale(0.9); }
+    35% { opacity: 0.9; transform: translateY(-4px) scale(1.03); }
+    100% { opacity: 0; transform: translateY(-16px) scale(1.18); }
 }
 
 @keyframes sectionSmoke {
-    0% {
-        opacity: 0;
-        transform: scale(0.95) translateY(2px);
+    0% { opacity: 0; transform: scale(0.95) translateY(2px); }
+    25% { opacity: 0.95; transform: scale(1.01) translateY(-1px); }
+    100% { opacity: 0; transform: scale(1.05) translateY(-12px); }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 640px) {
+    .bottom-row {
+        flex-wrap: wrap;
     }
-    25% {
-        opacity: 0.95;
-        transform: scale(1.01) translateY(-1px);
+
+    .priority-container {
+        width: 100%;
+        flex: 1 1 100%;
     }
-    100% {
-        opacity: 0;
-        transform: scale(1.05) translateY(-12px);
-    }
-}
 
-.priority-alta { border-left: 5px solid red; }
-
-.priority-media { border-left: 5px solid yellow; }
-
-.priority-baja { border-left: 5px solid green; }
-
-li span {
-    margin-right: 10px ;
-}
-
-.priority-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 30px;
-    height:  30px;
-
-    border-radius: 50%;
-    font-size: 14px;
-
-    margin-right: 10px;
-}
-
-.priority-alta .priority-icon {
-    background: rgba(255, 0, 0, 0.2);
-}
-.priority-media .priority-icon {
-    background: rgba(255, 255, 0, 0.2);
-}
-.priority-baja .priority-icon {
-    background: rgba(0, 255, 0, 0.2);
-}
-
-@keyframes pulseFire {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.2);
-    }
-    100% {
-        transform: scale(1);
+    .filters {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: flex-start;
     }
 }
 
-.priority-alta .priority-icon {
-        background: rgba(255, 0, 0, 0.2);
-    animation: pulseFire 0.8s infinite;
-    box-shadow: 0 0 8px rgba(255, 0, 0, 0.4);
+#prioritySelect option {
+    background: #2c2c2c;
+    color: #eaeaea;
 }
 
-
-.task-left {
-    display: flex;
-    align-items: center;
-}
+#prioritySelect option[value="alta"]  { color: #ff7b7b; }
+#prioritySelect option[value="media"] { color: #ffd85e; }
+#prioritySelect option[value="baja"]  { color: #77e39a; }
