@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mi To-DO</title>
 
-  <!-- Fuente usada en tu CSS -->
+ 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
@@ -37,14 +37,18 @@
   </select>
 </div>
 
+
       <div class="filters">
+        
         <button type="button" class="active" data-filter="all">Todas</button>
         <button type="button" data-filter="completed">✔</button>
         <button type="button" data-filter="pending">Pendientes</button>
         <button type="button" id="clearAll" aria-label="Vaciar tareas">🗑</button>
+       
       </div>
+      
     </div>
-
+ <div id = "taskCounter"> </div>
     <!-- Lista -->
     <ul id="taskList"></ul>
   </main>

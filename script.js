@@ -5,6 +5,7 @@ const taskList = document.getElementById("taskList");
 const clearAllBtn = document.getElementById("clearAll");
 const filterButtons = document.querySelectorAll(".filters button[data-filter]");
 const priorityContainer = document.querySelector(".priority-container");
+const taskCounter = document.getElementById("taskCounter"); 
 
 const STORAGE_KEY = "todo_tasks_v1";
 
@@ -88,7 +89,9 @@ function renderTasks() {
     li.appendChild(actions);
 
     taskList.appendChild(li);
+   
   });
+    updateTaskCounter();
 }
 
 function addTask() {
@@ -98,7 +101,7 @@ function addTask() {
   tasks.unshift({
     id: Date.now(),
     text,
-    priority: prioritySelect.value,
+    priority: prioritySelect.value, 
     completed: false,
     createdAt: new Date().toISOString()
   });
@@ -108,6 +111,13 @@ function addTask() {
 
   saveTasks();
   renderTasks();
+}
+
+function updateTaskCounter() {
+const total = tasks.length;
+const completed = tasks.filter(t => t.completed).length;
+const pending = total - completed;
+taskCounter.textContent = `📋 ${total} tareas | ✅ ${completed} completadas | ⏳ ${pending} pendientes`;
 }
 
 function setFilter(filter) {

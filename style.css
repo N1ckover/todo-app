@@ -364,3 +364,18 @@ li span {
 #prioritySelect option[value="alta"]  { color: #ff7b7b; }
 #prioritySelect option[value="media"] { color: #ffd85e; }
 #prioritySelect option[value="baja"]  { color: #77e39a; }
+
+#taskCounter {
+    margin: 5px 0 10px 0; /* espacio arriba y abajo */
+    padding: 8px 120px;
+
+    background: #252525;
+    border-radius: 8px;
+
+    font-size: 13px;            
+    color: #bbb;
+
+    text-align: center;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
