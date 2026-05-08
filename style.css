@@ -367,7 +367,7 @@ li span {
 
 #taskCounter {
     margin: 5px 0 10px 0; /* espacio arriba y abajo */
-    padding: 8px 120px;
+    padding: 8px 12px;
 
     background: #252525;
     border-radius: 8px;

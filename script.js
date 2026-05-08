@@ -58,6 +58,7 @@ function renderTasks() {
 
     const text = document.createElement("span");
     text.textContent = task.text;
+    text.addEventListener("dblclick",() =>startEditing(text, task));
     if (task.completed) text.classList.add("completed");
 
     const date = document.createElement("span");
@@ -112,6 +113,38 @@ function addTask() {
   saveTasks();
   renderTasks();
 }
+
+function startEditing(text, task) {
+  const input = document.createElement("input");
+  input.type = "text";
+  input.value = task.text;
+  input.classList.add("edit-input");
+
+  text.replaceWith(input);
+  input.focus();
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      finishEditing(input, task);
+    }
+  });
+
+  input.addEventListener("blur", () => {
+    finishEditing(input, task);
+  });
+}
+
+function finishEditing(input, task){
+  const newtext = input.value.trim();
+
+  if(newtext) {
+    task.text = newtext;
+    saveTasks();
+  }
+
+  renderTasks();
+}
+
 
 function updateTaskCounter() {
 const total = tasks.length;
