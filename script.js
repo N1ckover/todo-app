@@ -122,10 +122,13 @@ function startEditing(text, task) {
 
   text.replaceWith(input);
   input.focus();
-
+  input.select();
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       finishEditing(input, task);
+    }
+    if (e.key === "Escape") {
+      renderTasks();
     }
   });
 
